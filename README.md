@@ -98,3 +98,13 @@ curl -X GET "http://localhost:8080/api/pokemon/most-experienced" \
 
 ## Start the application
 mvn spring-boot:run
+
+## Problems and decisions
+
+- Structured the project following the MVC (Model-View-Controller) pattern by separating concerns into three layers: controller, model, and service. This approach aligns with the SOLID principles.
+- Configured Spring Boot annotations such as @RestController, @RequestMapping, and @GetMapping to simplify endpoint creation and improve route readability.
+- Attempted to use Lombok to reduce boilerplate code by applying annotations such as @Data, @NoArgsConstructor, and @AllArgsConstructor in the model class, as well as @Getter and @Setter in the service layer. However, encountered integration issues with Lombok in the IDE and build process. As a result, reverted to manually writing constructors and getter/setter methods to ensure stability and compatibility.
+- Implemented caching using the @Cacheable annotation on service methods to prevent repeated calls to the external PokeAPI endpoint for the same Pokemon.
+- Integrated with an external REST API (PokeAPI) to retrieve Pokémon data based on name or ID. Designed a dedicated service layer method using RestTemplate to encapsulate this logic and keep the controller lean and focused on HTTP concerns.
+- Handled external API failures by catching RestClientException and wrapping it in a custom PokemonNotFoundException to improve error readability and facilitate potential global exception handling via @ControllerAdvice.
+- Manually tested endpoints using tools like Postman and cURL to verify response data for various edge cases.
