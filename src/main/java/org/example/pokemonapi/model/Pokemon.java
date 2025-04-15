@@ -1,5 +1,7 @@
 package org.example.pokemonapi.model;
 
+import java.util.Objects;
+
 public class Pokemon {
     private String name;
     private int weight;
@@ -50,11 +52,27 @@ public class Pokemon {
     @Override
     public String toString() {
         return String.format(
-                "Name: %s%nWeight: %.1f kg%nHeight: %.1f m%nBase Experience: %d",
+                "Name: %s%nWeight: %d%nHeight: %d%nBase Experience: %d",
                 name,
                 weight,
                 height,
                 baseExperience
         );
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Pokemon pokemon = (Pokemon) o;
+        return weight == pokemon.weight &&
+                height == pokemon.height &&
+                baseExperience == pokemon.baseExperience &&
+                Objects.equals(name, pokemon.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, weight, height, baseExperience);
     }
 }
