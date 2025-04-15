@@ -75,11 +75,22 @@ public class PokemonService {
                 .collect(Collectors.toList());
     }
 
-    private static class PokemonResponse {
-        private String name;
-        private int weight;
-        private int height;
-        private int base_experience;
+    static class PokemonResponse {
+        String name;
+        int weight;
+        int height;
+        int base_experience;
+
+        // No-args constructor
+        public PokemonResponse() {}
+
+        // All-args constructor
+        public PokemonResponse(String name, int weight, int height, int base_experience) {
+            this.name = name;
+            this.weight = weight;
+            this.height = height;
+            this.base_experience = base_experience;
+        }
 
         public String getName() { return name; }
         public int getWeight() { return weight; }
@@ -87,15 +98,32 @@ public class PokemonService {
         public int getBaseExperience() { return base_experience; }
     }
 
-    private static class PokemonListResponse {
-        private List<PokemonResult> results;
+    static class PokemonListResponse {
+        List<PokemonResult> results;
+
+        // No-args constructor
+        public PokemonListResponse() {}
+
+        // All-args constructor
+        public PokemonListResponse(List<PokemonResult> results) {
+            this.results = results;
+        }
 
         public List<PokemonResult> getResults() { return results; }
     }
 
-    private static class PokemonResult {
+    static class PokemonResult {
         private String name;
         private String url;
+
+        // No-args constructor
+        public PokemonResult() {}
+
+        // All-args constructor
+        public PokemonResult(String name, String url) {
+            this.name = name;
+            this.url = url;
+        }
 
         public String getName() { return name; }
         public String getUrl() { return url; }
