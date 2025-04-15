@@ -1,4 +1,4 @@
-# Pokémon API
+# Pokemon API
 
 ## Overview
 This application provides Pokemon data from PokeAPI, including:
