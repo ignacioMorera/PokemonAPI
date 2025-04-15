@@ -5,16 +5,38 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 @Service
 public class PokemonService {
-
     private static final String POKEAPI_URL = "https://pokeapi.co/api/v2/pokemon/";
     private final RestTemplate restTemplate = new RestTemplate();
+    private final ExecutorService executor = Executors.newFixedThreadPool(10);
+
+    @Cacheable("allPokemons")
+    public List<Pokemon> getAllPokemons() {
+        PokemonListResponse response = restTemplate.getForObject(POKEAPI_URL, PokemonListResponse.class);
+        if (response == null || response.getResults() == null) {
+            throw new RuntimeException("Failed to fetch Pokémon list");
+        }
+
+        return response.getResults().parallelStream()
+                .map(result -> CompletableFuture.supplyAsync(() -> {
+                    try {
+                        return getPokemon(result.getName());
+                    } catch (Exception e) {
+                        return null;
+                    }
+                }, executor))
+                .map(CompletableFuture::join)
+                .filter(p -> p != null)
+                .collect(Collectors.toList());
+    }
 
     public Pokemon getPokemon(String nameOrId) {
         String url = POKEAPI_URL + nameOrId.toLowerCase();
@@ -30,22 +52,6 @@ public class PokemonService {
                 response.getHeight(),
                 response.getBaseExperience()
         );
-    }
-
-    @Cacheable("allPokemons")
-    public List<Pokemon> getAllPokemons() {
-        List<Pokemon> pokemons = new ArrayList<>();
-        String[] demoPokemons = {"snorlax", "charizard", "gyarados", "mewtwo", "onix",
-                "steelix", "rayquaza", "wailord", "groudon", "kyogre"};
-
-        for (String name : demoPokemons) {
-            try {
-                pokemons.add(getPokemon(name));
-            } catch (Exception e) {
-                continue;
-            }
-        }
-        return pokemons;
     }
 
     public List<Pokemon> getHeaviestPokemons(int limit) {
@@ -75,36 +81,23 @@ public class PokemonService {
         private int height;
         private int base_experience;
 
-        public String getName() {
-            return name;
-        }
+        public String getName() { return name; }
+        public int getWeight() { return weight; }
+        public int getHeight() { return height; }
+        public int getBaseExperience() { return base_experience; }
+    }
 
-        public void setName(String name) {
-            this.name = name;
-        }
+    private static class PokemonListResponse {
+        private List<PokemonResult> results;
 
-        public int getWeight() {
-            return weight;
-        }
+        public List<PokemonResult> getResults() { return results; }
+    }
 
-        public void setWeight(int weight) {
-            this.weight = weight;
-        }
+    private static class PokemonResult {
+        private String name;
+        private String url;
 
-        public int getHeight() {
-            return height;
-        }
-
-        public void setHeight(int height) {
-            this.height = height;
-        }
-
-        public int getBaseExperience() {
-            return base_experience;
-        }
-
-        public void setBase_experience(int base_experience) {
-            this.base_experience = base_experience;
-        }
+        public String getName() { return name; }
+        public String getUrl() { return url; }
     }
 }
