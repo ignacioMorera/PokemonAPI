@@ -1,5 +1,6 @@
 package org.example.pokemonapi.service;
 
+import org.example.pokemonapi.exception.PokemonNotFoundException;
 import org.example.pokemonapi.model.Pokemon;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -43,7 +44,7 @@ public class PokemonService {
         PokemonResponse response = restTemplate.getForObject(url, PokemonResponse.class);
 
         if (response == null) {
-            throw new RuntimeException("Pokémon not found!");
+            throw new PokemonNotFoundException("Pokémon with name or ID '" + nameOrId + "' not found.");
         }
 
         return new Pokemon(
