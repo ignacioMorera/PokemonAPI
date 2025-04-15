@@ -1,14 +1,19 @@
 package org.example.pokemonapi.service;
 
 import org.example.pokemonapi.model.Pokemon;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PokemonService {
 
     private static final String POKEAPI_URL = "https://pokeapi.co/api/v2/pokemon/";
-
     private final RestTemplate restTemplate = new RestTemplate();
 
     public Pokemon getPokemon(String nameOrId) {
@@ -25,6 +30,43 @@ public class PokemonService {
                 response.getHeight(),
                 response.getBaseExperience()
         );
+    }
+
+    @Cacheable("allPokemons")
+    public List<Pokemon> getAllPokemons() {
+        List<Pokemon> pokemons = new ArrayList<>();
+        String[] demoPokemons = {"snorlax", "charizard", "gyarados", "mewtwo", "onix",
+                "steelix", "rayquaza", "wailord", "groudon", "kyogre"};
+
+        for (String name : demoPokemons) {
+            try {
+                pokemons.add(getPokemon(name));
+            } catch (Exception e) {
+                continue;
+            }
+        }
+        return pokemons;
+    }
+
+    public List<Pokemon> getHeaviestPokemons(int limit) {
+        return getAllPokemons().stream()
+                .sorted(Comparator.comparingInt(Pokemon::getWeight).reversed())
+                .limit(limit)
+                .collect(Collectors.toList());
+    }
+
+    public List<Pokemon> getHighestPokemons(int limit) {
+        return getAllPokemons().stream()
+                .sorted(Comparator.comparingInt(Pokemon::getHeight).reversed())
+                .limit(limit)
+                .collect(Collectors.toList());
+    }
+
+    public List<Pokemon> getPokemonsByBaseExperience(int limit) {
+        return getAllPokemons().stream()
+                .sorted(Comparator.comparingInt(Pokemon::getBaseExperience).reversed())
+                .limit(limit)
+                .collect(Collectors.toList());
     }
 
     private static class PokemonResponse {
