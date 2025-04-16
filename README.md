@@ -18,6 +18,43 @@ mvn clean install
 mvn spring-boot:run
 ```
 
+## 📂 Project Structure
+
+```
+src
+├── main
+│   ├── java
+│   │   └── org.example.pokemonapi
+│   │       ├── controller
+│   │       │   └── PokemonController.java
+│   │       ├── exception
+│   │       │   ├── GlobalExceptionHandler.java
+│   │       │   └── PokemonNotFoundException.java
+│   │       ├── model
+│   │       │   └── Pokemon.java
+│   │       ├── service
+│   │       │   └── PokemonService.java
+│   │       └── PokemonApiApplication.java
+│   └── resources
+└── test
+    ├── java
+    │   └── org.example.pokemonapi
+    │       ├── integration
+    │       │   ├── controller
+    │       │   │   └── PokemonControllerIntegrationTest.java
+    │       │   └── service
+    │       │       └── PokemonServiceTest.java
+    │       ├── unit
+    │       │   ├── controller
+    │       │   │   └── PokemonControllerTest.java
+    │       │   ├── model
+    │       │   │   └── PokemonTest.java
+    │       │   └── service
+    │       │       └── PokemonServiceTest.java
+    │       └── PokemonApiApplicationTests.java
+
+```
+
 ## API Endpoints
 
 ## Get Pokemon by Name:
