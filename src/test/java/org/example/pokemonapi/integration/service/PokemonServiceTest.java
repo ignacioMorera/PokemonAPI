@@ -1,6 +1,7 @@
-package org.example.pokemonapi.service;
+package org.example.pokemonapi.integration.service;
 
 import org.example.pokemonapi.model.Pokemon;
+import org.example.pokemonapi.service.PokemonService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -11,7 +12,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 class PokemonServiceTest {
@@ -41,7 +42,7 @@ class PokemonServiceTest {
         mockResponse.name = "bulbasaur";
         mockResponse.weight = 69;
         mockResponse.height = 7;
-        mockResponse.base_experience = 0;
+        mockResponse.base_experience = 64;
 
         when(restTemplate.getForObject(anyString(), eq(PokemonService.PokemonResponse.class)))
                 .thenReturn(mockResponse);
@@ -51,7 +52,7 @@ class PokemonServiceTest {
         assertEquals("bulbasaur", result.getName());
         assertEquals(69, result.getWeight());
         assertEquals(7, result.getHeight());
-        assertEquals(0, result.getBaseExperience());
+        assertEquals(64, result.getBaseExperience());
     }
 
     @Test
@@ -141,32 +142,32 @@ class PokemonServiceTest {
     void getPokemonsByBaseExperience_ShouldReturnAll() {
         PokemonService.PokemonListResponse mockListResponse = new PokemonService.PokemonListResponse();
         mockListResponse.results = Arrays.asList(
-                new PokemonService.PokemonResult("bulbasaur", ""),
-                new PokemonService.PokemonResult("ivysaur", ""),
+                new PokemonService.PokemonResult("charizard", ""),
+                new PokemonService.PokemonResult("blastoise", ""),
                 new PokemonService.PokemonResult("venusaur", ""),
-                new PokemonService.PokemonResult("charmander", ""),
-                new PokemonService.PokemonResult("charmeleon", "")
+                new PokemonService.PokemonResult("pidgeot", ""),
+                new PokemonService.PokemonResult("butterfree", "")
         );
 
         when(restTemplate.getForObject(anyString(), eq(PokemonService.PokemonListResponse.class)))
                 .thenReturn(mockListResponse);
 
-        when(restTemplate.getForObject(contains("bulbasaur"), eq(PokemonService.PokemonResponse.class)))
-                .thenReturn(createMockResponse("bulbasaur", 69, 7, 0));
-        when(restTemplate.getForObject(contains("ivysaur"), eq(PokemonService.PokemonResponse.class)))
-                .thenReturn(createMockResponse("ivysaur", 130, 10, 0));
+        when(restTemplate.getForObject(contains("charizard"), eq(PokemonService.PokemonResponse.class)))
+                .thenReturn(createMockResponse("charizard", 905, 17, 267));
+        when(restTemplate.getForObject(contains("blastoise"), eq(PokemonService.PokemonResponse.class)))
+                .thenReturn(createMockResponse("blastoise", 855, 16, 265));
         when(restTemplate.getForObject(contains("venusaur"), eq(PokemonService.PokemonResponse.class)))
-                .thenReturn(createMockResponse("venusaur", 1000, 20, 0));
-        when(restTemplate.getForObject(contains("charmander"), eq(PokemonService.PokemonResponse.class)))
-                .thenReturn(createMockResponse("charmander", 85, 6, 0));
-        when(restTemplate.getForObject(contains("charmeleon"), eq(PokemonService.PokemonResponse.class)))
-                .thenReturn(createMockResponse("charmeleon", 190, 11, 0));
+                .thenReturn(createMockResponse("venusaur", 1000, 20, 263));
+        when(restTemplate.getForObject(contains("pidgeot"), eq(PokemonService.PokemonResponse.class)))
+                .thenReturn(createMockResponse("pidgeot", 395, 15, 216));
+        when(restTemplate.getForObject(contains("butterfree"), eq(PokemonService.PokemonResponse.class)))
+                .thenReturn(createMockResponse("butterfree", 320, 11, 198));
 
         List<Pokemon> result = pokemonService.getPokemonsByBaseExperience(5);
 
         assertEquals(5, result.size());
-        assertEquals(0, result.get(0).getBaseExperience());
-        assertEquals(0, result.get(4).getBaseExperience());
+        assertEquals(267, result.get(0).getBaseExperience());
+        assertEquals(198, result.get(4).getBaseExperience());
     }
 
     private PokemonService.PokemonResponse createMockResponse(String name, int weight, int height, int baseExperience) {

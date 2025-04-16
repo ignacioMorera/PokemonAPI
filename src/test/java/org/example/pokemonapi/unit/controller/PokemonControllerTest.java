@@ -1,5 +1,6 @@
-package org.example.pokemonapi.controller;
+package org.example.pokemonapi.unit.controller;
 
+import org.example.pokemonapi.controller.PokemonController;
 import org.example.pokemonapi.model.Pokemon;
 import org.example.pokemonapi.service.PokemonService;
 import org.junit.jupiter.api.BeforeEach;

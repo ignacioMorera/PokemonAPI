@@ -1,5 +1,6 @@
-package org.example.pokemonapi.model;
+package org.example.pokemonapi.unit.model;
 
+import org.example.pokemonapi.model.Pokemon;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 

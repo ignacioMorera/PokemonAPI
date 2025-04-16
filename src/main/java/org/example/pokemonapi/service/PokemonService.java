@@ -3,7 +3,9 @@ package org.example.pokemonapi.service;
 import org.example.pokemonapi.exception.PokemonNotFoundException;
 import org.example.pokemonapi.model.Pokemon;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Comparator;
@@ -16,8 +18,12 @@ import java.util.stream.Collectors;
 @Service
 public class PokemonService {
     private static final String POKEAPI_URL = "https://pokeapi.co/api/v2/pokemon/";
-    private final RestTemplate restTemplate = new RestTemplate();
+    private RestTemplate restTemplate; // = new RestTemplate();
     private final ExecutorService executor = Executors.newFixedThreadPool(10);
+
+    public PokemonService(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
 
     @Cacheable("allPokemons")
     public List<Pokemon> getAllPokemons() {
@@ -41,18 +47,25 @@ public class PokemonService {
 
     public Pokemon getPokemon(String nameOrId) {
         String url = POKEAPI_URL + nameOrId.toLowerCase();
-        PokemonResponse response = restTemplate.getForObject(url, PokemonResponse.class);
+        try {
+            PokemonResponse response = restTemplate.getForObject(url, PokemonResponse.class);
 
-        if (response == null) {
-            throw new PokemonNotFoundException("Pokémon with name or ID '" + nameOrId + "' not found.");
+            if (response == null) {
+                throw new PokemonNotFoundException("Pokémon with name or ID '" + nameOrId + "' not found.");
+            }
+
+            return new Pokemon(
+                    response.getName(),
+                    response.getWeight(),
+                    response.getHeight(),
+                    response.getBaseExperience()
+            );
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
+                throw new PokemonNotFoundException("Pokémon with name or ID '" + nameOrId + "' not found.");
+            }
+            throw e; // rethrow other unexpected errors
         }
-
-        return new Pokemon(
-                response.getName(),
-                response.getWeight(),
-                response.getHeight(),
-                response.getBaseExperience()
-        );
     }
 
     public List<Pokemon> getHeaviestPokemons(int limit) {
@@ -76,16 +89,14 @@ public class PokemonService {
                 .collect(Collectors.toList());
     }
 
-    static class PokemonResponse {
-        String name;
-        int weight;
-        int height;
-        int base_experience;
+    public static class PokemonResponse {
+        public String name;
+        public int weight;
+        public int height;
+        public int base_experience;
 
-        // No-args constructor
         public PokemonResponse() {}
 
-        // All-args constructor
         public PokemonResponse(String name, int weight, int height, int base_experience) {
             this.name = name;
             this.weight = weight;
@@ -99,13 +110,11 @@ public class PokemonService {
         public int getBaseExperience() { return base_experience; }
     }
 
-    static class PokemonListResponse {
-        List<PokemonResult> results;
+    public static class PokemonListResponse {
+        public List<PokemonResult> results;
 
-        // No-args constructor
         public PokemonListResponse() {}
 
-        // All-args constructor
         public PokemonListResponse(List<PokemonResult> results) {
             this.results = results;
         }
@@ -113,14 +122,12 @@ public class PokemonService {
         public List<PokemonResult> getResults() { return results; }
     }
 
-    static class PokemonResult {
+    public static class PokemonResult {
         private String name;
         private String url;
 
-        // No-args constructor
         public PokemonResult() {}
 
-        // All-args constructor
         public PokemonResult(String name, String url) {
             this.name = name;
             this.url = url;
