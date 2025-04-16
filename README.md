@@ -65,8 +65,10 @@ GET /api/pokemon/{nameOrId}
 ```
 
 # Example request:
+```bash
 curl -X GET "http://localhost:8080/api/pokemon/charizard" \
 -H "Accept: application/json"
+```
 
 # Response:
 
@@ -80,18 +82,47 @@ GET /api/pokemon/heaviest
 ```
 
 # Example request:
+```bash
 curl -X GET "http://localhost:8080/api/pokemon/heaviest" \
 -H "Accept: application/json"
+```
 
 # Response:
 
+```json
 [
-{"name":"venusaur","weight":1000,"height":20,"baseExperience":0},
-{"name":"charizard","weight":905,"height":17,"baseExperience":0},
-{"name":"blastoise","weight":855,"height":16,"baseExperience":0},
-{"name":"pidgeot","weight":395,"height":15,"baseExperience":0},
-{"name":"butterfree","weight":320,"height":11,"baseExperience":0}
+  {
+    "name": "venusaur",
+    "weight": 1000,
+    "height": 20,
+    "baseExperience": 0
+  },
+  {
+    "name": "charizard",
+    "weight": 905,
+    "height": 17,
+    "baseExperience": 0
+  },
+  {
+    "name": "blastoise",
+    "weight": 855,
+    "height": 16,
+    "baseExperience": 0
+  },
+  {
+    "name": "pidgeot",
+    "weight": 395,
+    "height": 15,
+    "baseExperience": 0
+  },
+  {
+    "name": "butterfree",
+    "weight": 320,
+    "height": 11,
+    "baseExperience": 0
+  }
 ]
+```
 
 ## Top 5 Tallest Pokemon:
 
@@ -101,17 +132,47 @@ GET /api/pokemon/highest
 ```
 
 # Example request:
+```bash
 curl -X GET "http://localhost:8080/api/pokemon/highest" \
 -H "Accept: application/json"
+```
 
 # Response:
+
+```json
 [
-{"name":"venusaur","weight":1000,"height":20,"baseExperience":0},
-{"name":"charizard","weight":905,"height":17,"baseExperience":0},
-{"name":"blastoise","weight":855,"height":16,"baseExperience":0},
-{"name":"pidgeot","weight":395,"height":15,"baseExperience":0},
-{"name":"charmeleon","weight":190,"height":11,"baseExperience":0}
+  {
+    "name": "venusaur",
+    "weight": 1000,
+    "height": 20,
+    "baseExperience": 0
+  },
+  {
+    "name": "charizard",
+    "weight": 905,
+    "height": 17,
+    "baseExperience": 0
+  },
+  {
+    "name": "blastoise",
+    "weight": 855,
+    "height": 16,
+    "baseExperience": 0
+  },
+  {
+    "name": "pidgeot",
+    "weight": 395,
+    "height": 15,
+    "baseExperience": 0
+  },
+  {
+    "name": "charmeleon",
+    "weight": 190,
+    "height": 11,
+    "baseExperience": 0
+  }
 ]
+```
 
 ## Top 5 Most Experienced Pokémon
 
@@ -121,17 +182,47 @@ GET /api/pokemon/most-experienced
 ```
 
 # Example request:
+```bash
 curl -X GET "http://localhost:8080/api/pokemon/most-experienced" \
 -H "Accept: application/json"
+```
 
 # Response:
+
+```json
 [
-{"name":"bulbasaur","weight":69,"height":7,"baseExperience":0},
-{"name":"ivysaur","weight":130,"height":10,"baseExperience":0},
-{"name":"venusaur","weight":1000,"height":20,"baseExperience":0},
-{"name":"charmander","weight":85,"height":6,"baseExperience":0},
-{"name":"charmeleon","weight":190,"height":11,"baseExperience":0}
+  {
+    "name": "bulbasaur",
+    "weight": 69,
+    "height": 7,
+    "baseExperience": 0
+  },
+  {
+    "name": "ivysaur",
+    "weight": 130,
+    "height": 10,
+    "baseExperience": 0
+  },
+  {
+    "name": "venusaur",
+    "weight": 1000,
+    "height": 20,
+    "baseExperience": 0
+  },
+  {
+    "name": "charmander",
+    "weight": 85,
+    "height": 6,
+    "baseExperience": 0
+  },
+  {
+    "name": "charmeleon",
+    "weight": 190,
+    "height": 11,
+    "baseExperience": 0
+  }
 ]
+```
 
 ## Start the application
 mvn spring-boot:run
