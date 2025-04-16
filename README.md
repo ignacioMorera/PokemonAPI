@@ -145,3 +145,7 @@ mvn spring-boot:run
 - Integrated with an external REST API (PokeAPI) to retrieve Pokémon data based on name or ID. Designed a dedicated service layer method using RestTemplate to encapsulate this logic and keep the controller lean and focused on HTTP concerns.
 - Handled external API failures by catching RestClientException and wrapping it in a custom PokemonNotFoundException to improve error readability and facilitate potential global exception handling via @ControllerAdvice.
 - Manually tested endpoints using tools like Postman and cURL to verify response data for various edge cases.
+- Used the 'Run tests in Java with Coverage' option to view the test coverage percentage.
+- GlobalExceptionHandler was added to centrally handle the exception PokemonNotFoundException and return an appropriate HTTP response (404 Not Found) with a custom error message.
+- Used Mockito to mock the RestTemplate to avoid making real API calls during unit tests, returning mock responses instead.
+- In the PokemonApiApplication class, added a @Bean method to create and configure the RestTemplate for injection.
